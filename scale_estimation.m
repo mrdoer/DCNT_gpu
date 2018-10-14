@@ -22,7 +22,7 @@ for i=1:length(scale)
     patch = get_subwindow(im, pos, window_sz);    
     patch1=double(imresize(patch,window_szo));
        
-    net1.eval({'input',single(patch1-meanImg)}); 
+    net1.eval({'input',gpuArray(single(patch1-meanImg))}); 
     
     index = [17 23 29];
     feat = cell(length(index),1);
@@ -48,10 +48,10 @@ for i=1:length(scale)
 %     featPCA=reshape(feat_,hf,wf,num_channels);
 %     net_online.eval({'input1',featPCA,'input2',featPCA1st});
 
-    net_online.eval({'input1',featPCA{1},'input2',featPCA{2},'input3',featPCA{3}, ...
-        'input4',featPCA1st});  
+    net_online.eval({'input1',gpuArray(featPCA{1}),'input2',gpuArray(featPCA{2}),'input3',gpuArray(featPCA{3}), ...
+        'input4',gpuArray(featPCA1st)});  
     
-    regression_map=gather(net_online.vars(10).value);
+    regression_map=gather(net_online.vars(22).value);
     value(i)=max(regression_map(:));
     
     if value(1)<threshold        

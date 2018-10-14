@@ -16,7 +16,7 @@ function config = config_list( test_seq )
         case 'Girl2'
             resize=70;
         otherwise
-            resize=100;
+            resize=50;
     end
     
     gtPath = fullfile(test_source, test_seq, 'groundtruth_rect.txt');

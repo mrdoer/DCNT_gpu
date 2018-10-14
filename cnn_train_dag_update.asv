@@ -172,19 +172,19 @@ if isempty(state) || isempty(state.solverState)
   state.solverState = cell(1, numel(net.params)) ;
 end
 
-% % move CNN  to GPU as needed
-% numGpus = numel(params.gpus) ;
-% if numGpus >= 1
-%   net.move('gpu') ;
-%   %state.momentum = cellfun(@gpuArray, state.momentum, 'uniformoutput', false) ;
-% end
-% if numGpus > 1
-%   parserv = ParameterServer(params.parameterServer) ;
-%   net.setParameterServer(parserv) ;
-% else
-%   parserv = [] ;
-% end
-parserv = [] ;
+% move CNN  to GPU as needed
+numGpus = numel(params.gpus) ;
+if numGpus >= 1
+  net.move('gpu') ;
+  %state.momentum = cellfun(@gpuArray, state.momentum, 'uniformoutput', false) ;
+end
+if numGpus > 1
+  parserv = ParameterServer(params.parameterServer) ;
+  net.setParameterServer(parserv) ;
+else
+  parserv = [] ;
+end
+
 % profile
 if params.profile
   if numGpus <= 1
@@ -231,7 +231,7 @@ for t=1:params.batchSize:numel(subset)
     sample3{1}=input{1}{1}{3};
     sample3{2}=input{1}{2}{3};
     
-    sample4=input{2}; %featPCA1st
+    sample4=input{2}; %featP
     sample5=input{3}; %label
 
     [hs,ws,cs]=size(sample1{1});    
@@ -254,11 +254,6 @@ for t=1:params.batchSize:numel(subset)
 %     ims1=gpuArray(ims1);
 %     ims2=gpuArray(ims2);
 %     labels=gpuArray(labels);
-%     input1 = gpuArray(input1);
-%     input2 = gpuArray(input2);
-%     input3 = gpuArray(input3);
-%     input4 = gpuArray(input4);
-%     labels = gpuArray(labels);
         
     inputs ={'input1', input1, 'input2', input2,'input3',input3, ...
           'input4',input4,'label', labels};

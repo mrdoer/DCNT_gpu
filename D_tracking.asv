@@ -167,7 +167,7 @@ cell_size=4;
 global num_update;
 num_update=2;
 cur=1;
-feat_update = cell(num_update,1);
+feat_update=cell(num_update,1);
 % feat_update1=cell(num_update,1);
 % feat_update2=cell(num_update,1);
 % feat_update3=cell(num_update,1);
@@ -270,7 +270,7 @@ for i=2:nFrame
         input={feat_update featPCA1st label_update};
         opts.train.gpus=1;
         bopts.useGpu = numel(opts.train.gpus) > 0 ;
-        net_online.move('cpu');                     
+%         net_online.move('cpu');                     
         info = cnn_train_dag_update(net_online, imdb, input,getBatchWrapper(bopts), ...
                              trainOpts, ...
                              'train', train, ...                     

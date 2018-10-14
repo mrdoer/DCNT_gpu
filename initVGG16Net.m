@@ -1,9 +1,9 @@
 function [net1, avgImg] = initVGG16Net( )
 %VGG16
 %finetune layer number, weightdecay, learningrate
-% opts.gpus = 0;%1 2017-09-08 11:08:18
-% cold=true;
-% prepareGPUs(opts,cold);
+opts.gpus = 1;%1 2017-09-08 11:08:18
+cold=true;
+prepareGPUs(opts,cold);
 
 net2=load('F:\caffe-master\model\imagenet-vgg-verydeep-16.mat');%./exp/model F:\caffe-master\model
 net2.layers(31:end) = [];
@@ -219,45 +219,46 @@ net1.params(f).value=net2.layers{29}.weights{2};
 net1.params(f).learningRate=0;
 net1.params(f).weightDecay=1;
 
-net1.mode = 'test';
+% net1.mode = 'test';
+net1.move('gpu');
 net1.conserveMemory = 0;
 clear net2;
 end
 
 % -------------------------------------------------------------------------
-% function clearMex()
+function clearMex()
 % % -------------------------------------------------------------------------
-% clear vl_tflow vl_imreadjpeg ;
-% end
+clear vl_tflow vl_imreadjpeg ;
+end
 
 % -------------------------------------------------------------------------
-% function prepareGPUs(opts, cold)
+function prepareGPUs(opts, cold)
 % % -------------------------------------------------------------------------
-% numGpus = numel(opts.gpus) ;
-% if numGpus > 1
-%   % check parallel pool integrity as it could have timed out
-%   pool = gcp('nocreate') ;
-%   if ~isempty(pool) && pool.NumWorkers ~= numGpus
-%     delete(pool) ;
-%   end
-%   pool = gcp('nocreate') ;
-%   if isempty(pool)
-%     parpool('local', numGpus) ;
-%     cold = true ;
-%   end
-% 
-% end
-% if numGpus >= 1 && cold
-%   fprintf('%s: resetting GPU\n', mfilename)
-%   clearMex() ;
-%   if numGpus == 1
-%     gpuDevice(opts.gpus)
-%   else
-%     spmd
-%       clearMex() ;
-%       gpuDevice(opts.gpus(labindex))
-%     end
-%   end
-% end
-% end
+numGpus = numel(opts.gpus) ;
+if numGpus > 1
+  % check parallel pool integrity as it could have timed out
+  pool = gcp('nocreate') ;
+  if ~isempty(pool) && pool.NumWorkers ~= numGpus
+    delete(pool) ;
+  end
+  pool = gcp('nocreate') ;
+  if isempty(pool)
+    parpool('local', numGpus) ;
+    cold = true ;
+  end
+
+end
+if numGpus >= 1 && cold
+  fprintf('%s: resetting GPU\n', mfilename)
+  clearMex() ;
+  if numGpus == 1
+    gpuDevice(opts.gpus)
+  else
+    spmd
+      clearMex() ;
+      gpuDevice(opts.gpus(labindex))
+    end
+  end
+end
+end
 

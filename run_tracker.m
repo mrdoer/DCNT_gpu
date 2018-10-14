@@ -17,7 +17,7 @@ function [precision, fps] = run_tracker(video, show_visualization, show_plots)
     % opts.beta2 = 0.999;
     % opts.eps = 1e-8;
     [opts, varargin] = vl_argparse(opts, varargin) ;
-
+    [config] = config_list(video);
     % experiment setup
     % opts.imdbPath = fullfile(opts.expDir, 'imdb.mat') ;
     % opts.imdbStatsPath = fullfile(opts.expDir, 'imdbStats.mat') ;
@@ -105,7 +105,7 @@ function [precision, fps] = run_tracker(video, show_visualization, show_plots)
 		
         
 		%call tracker function with all the relevant parameters
-		[positions, time] = tracker_lct(video_path, img_files, pos, target_sz, config, show_visualization);
+		[positions] = D_tracking(opts,config,display,varargin);
 		
 		
 		%calculate and show precision plot, as well as frames-per-second
