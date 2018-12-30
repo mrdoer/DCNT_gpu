@@ -1,9 +1,13 @@
 function config = config_list( test_seq )
 %Test file configuration
+%     test_seq_ = regexp(test_seq,'_\d*','split');
+%     test_seq = test_seq_(1);
+%     test_seq = test_seq;
     global resize;
     test_source='F:\caffe-master\Data\';
+    
     imgList=parseImg([test_source '/' test_seq]);
-
+    
     switch(test_seq)
         case 'David'
             imgList = imgList(300:end);

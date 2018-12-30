@@ -1,3 +1,4 @@
+
 function [net1, avgImg] = initVGG16Net( )
 %VGG16
 %finetune layer number, weightdecay, learningrate

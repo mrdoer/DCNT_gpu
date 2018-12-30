@@ -1,4 +1,4 @@
-function [ result ] = D_tracking( opts ,config, display, varargin)
+function [ results,time ] = D_tracking( opts ,config, display, varargin)
 % net1:              modified VGG16Net, used to extract features 
 % net_online:        input1                     input2
 %                      |_________                 |
@@ -22,7 +22,7 @@ function [ result ] = D_tracking( opts ,config, display, varargin)
 % 
 global objSize;
 
-LocGt=config.gt;
+% LocGt=config.gt;
 num_channels=64;
 
 % training options (SGD)
@@ -114,9 +114,9 @@ target_sz1=ceil(target_sz/cell_size);
 output_sigma = target_sz1*output_sigma_factor;
 label=gaussian_shaped_labels(output_sigma, l1_patch_num);
 
-label1=imresize(label,[size(im1,1) size(im1,1)])*255;
-patch1=imresize(patch,[size(im1,1) size(im1,1)]);
-imd=[im1];
+% label1=imresize(label,[size(im1,1) size(im1,1)])*255;
+% patch1=imresize(patch,[size(im1,1) size(im1,1)]);
+imd=im1;
 
 %-------------------Display First frame----------
 if display    
@@ -174,6 +174,8 @@ feat_update = cell(num_update,1);
 label_update=cell(num_update,1);
 target_szU = target_sz;
 
+time = 0;
+tic()
 for i=2:nFrame       
     im1=imread(config.imgList{i});          
     im=imresize(im1,scale);    
@@ -229,9 +231,9 @@ for i=2:nFrame
     targetLoc = [pos([2,1]) - target_szU([2,1])/2, target_szU([2,1])];    
     result(i,:) = round(targetLoc/scale);                  
             
-    label1 = imresize(regression_map,[size(im1,1) size(im1,1)])*255;
-    patch1 = imresize(patch,[size(im1,1) size(im1,1)]);     
-    imd = [im1];
+%     label1 = imresize(regression_map,[size(im1,1) size(im1,1)])*255;
+%     patch1 = imresize(patch,[size(im1,1) size(im1,1)]);     
+    imd = im1;
 %    -----------Display current frame-----------------
     if display   
         hc = get(gca, 'Children'); delete(hc(1:end-1));
@@ -283,6 +285,9 @@ for i=2:nFrame
     end
                
 end
+
+time = time + toc();
+results = result;
 
 end
 

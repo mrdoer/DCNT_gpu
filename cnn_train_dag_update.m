@@ -206,8 +206,8 @@ stats.time = 0 ;
 
 start = tic ;
 for t=1:params.batchSize:numel(subset)
-  fprintf('%s: epoch %02d: %3d/%3d:', mode, epoch, ...
-          fix((t-1)/params.batchSize)+1, ceil(numel(subset)/params.batchSize)) ;
+%   fprintf('%s: epoch %02d: %3d/%3d:', mode, epoch, ...
+%           fix((t-1)/params.batchSize)+1, ceil(numel(subset)/params.batchSize)) ;
   batchSize = min(params.batchSize, numel(subset) - t + 1) ;
 
   for s=1:params.numSubBatches
@@ -304,7 +304,7 @@ for t=1:params.batchSize:numel(subset)
     stats.time = time + adjustTime ;
   end
 
-  fprintf(' %.1f (%.1f) Hz', averageSpeed, currentSpeed) ;
+%   fprintf(' %.1f (%.1f) Hz', averageSpeed, currentSpeed) ;
   for f = setdiff(fieldnames(stats)', {'num', 'time'})
     f = char(f) ;
     fprintf(' %s: %.8f', f, stats.(f)) ;

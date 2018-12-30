@@ -32,9 +32,18 @@ g=gpuDevice(1);
 clear g;                             
 
 test_seq = 'Deer';
+show_plots = true;
 [config] = config_list(test_seq);
+target_sz = config.gt(1,3:4);
+ground_truth = config.gt;
 
-result = D_tracking(opts,config,display,varargin);        
+[positions,time] = D_tracking(opts,config,display,varargin);
+rects   = [positions(:,2) - target_sz(2)/2, positions(:,1) - target_sz(1)/2];
+precisions = precision_plot(positions, ground_truth, test_seq, show_plots);
+
+fps = config.nFrames/time;
+
+fprintf('%12s - Precision (20px):% 1.3f, FPS:% 4.2f\n', test_seq, precisions(20), fps)
        
 
 
